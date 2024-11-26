@@ -12,7 +12,7 @@ async function checkAuth() {
   const response = await axios.get("/api/auth");
   if (response.data) {
     const userStore = useUserStore();
-    userStore.setUser({ email: response.data });
+    userStore.setUser(response.data);
   } else {
     router.push("/login");
   }

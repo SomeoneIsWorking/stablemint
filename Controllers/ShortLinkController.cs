@@ -25,7 +25,7 @@ namespace stablemint.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = int.Parse(User.Identity.Name);
 
             var links = await _context.ShortLinks
                 .Where(l => l.UserId == userId)
@@ -43,7 +43,7 @@ namespace stablemint.Controllers
                 return BadRequest("Invalid URL");
             }
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = int.Parse(User.Identity.Name);
             
             var oneHourAgo = DateTime.UtcNow.AddHours(-1);
             var recentLinksCount = await _context.ShortLinks

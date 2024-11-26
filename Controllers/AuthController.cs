@@ -30,12 +30,13 @@ namespace stablemint.Controllers
             {
                 return NoContent();
             }
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+            var userId = int.Parse(User.Identity.Name);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
                 return NoContent();
             }
-            return Ok(user.Email);
+            return Ok(new { user.Email });
         }
 
         [HttpPost]
@@ -52,8 +53,6 @@ namespace stablemint.Controllers
                 user = new User
                 {
                     Email = model.Email,
-                    UserName = model.Email,
-                    EmailConfirmed = true
                 };
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
@@ -61,9 +60,7 @@ namespace stablemint.Controllers
 
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Name, user.Email),
-                new(ClaimTypes.Email, user.Email),
-                new(ClaimTypes.NameIdentifier, user.Id)
+                new(ClaimTypes.Name, user.Id.ToString())
             };
 
             var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
@@ -74,13 +71,13 @@ namespace stablemint.Controllers
                 principal,
                 new AuthenticationProperties { IsPersistent = true });
 
-            return Ok(user.Email);
+            return Ok(new { user.Email });
         }
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            await HttpContext.SignOutAsync();
             return Ok();
         }
 

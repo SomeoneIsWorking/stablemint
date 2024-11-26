@@ -46,7 +46,7 @@ const login = async () => {
     const response = await axios.post("/api/auth", {
       email: email.value,
     });
-    userStore.setUser({ email: response.data });
+    userStore.setUser(response.data);
     router.push("/");
   } catch (err: any) {
     error.value = err.response?.data?.message || "Login failed. Please try again.";

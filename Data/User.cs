@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace stablemint.Data;
 
-[Table("User")]
-public class User : IdentityUser
+public class User
 {
+    public int Id { get; set; }
+    public string Email { get; set; }
 }
